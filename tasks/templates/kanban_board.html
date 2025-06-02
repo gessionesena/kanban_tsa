@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+    <style>
+        
+        .board {
+            display: flex;
+            gap: 20px;
+            padding: 15px;
+            overflow-x: auto;
+        }
+        .column {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 2px 10px;
+            width: 300px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+        }
+        .column-header {
+            text-decoration: none;
+        }
+        
+        .column-header h2 {
+            font-size: 1.2em;
+            color: #0d3c6d;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+        }
+        .column-header:hover .header-h2 {
+            color: #bbd3ea;
+        }
+        .task {
+            background-color: #fff;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;   
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            transition: background-color 0.3s ease;
+        }
+        
+        .task-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        .task-link:hover .task {
+            background-color: #bbd3ea;
+            cursor: pointer;
+        }
+
+        #search-form {
+            text-align: center; 
+            margin: 20px 0;
+        }
+        #search-form button {
+            padding: 8px 20px; 
+            border: none; 
+            background-color: #0d3c6d; 
+            color: white; 
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #search-form button:hover {
+            background-color: #0b2f53; 
+        }
+        
+        #search-form a {
+            background-color: #0d3c6d;
+            font-size: 13px;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            padding: 8px 20px; 
+            border: none;
+        }
+        #search-form a:hover{
+            background-color: #0b2f53; 
+        }
+        #search-input {
+            padding: 6px; 
+            width: 350px; 
+            border-radius: 5px; 
+            border: 1px solid #ccc;
+        }
+        #search-form a {
+            background-color: #0d3c6d;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            padding: 8px 20px; 
+            border: none;
+        }
+
+    </style>
+
+    <body>
+        <form method="get" id="search-form" action="">
+            <input type="text" name="search" id="search-input" placeholder="Buscar tarefas" value="{{ query }}">
+            <button type="submit">Buscar</button>
+            <a href="{% url 'task_create' %}">Criar Nova Tarefa</a>
+        </form>
+
+        <div class="board">
+            {% for column in columns %}
+                <div class="column">
+                    <a href="{% url 'column_tasks' column.id %}" class="column-header">
+                        <h2 class="header-h2">{{ column.name }} ( {{ column.task_set.count }} )</h2>
+                    </a>
+                    {% for task in column.tasks_filtered %}
+                        <a href="{% url 'task_detail' task.id %}" class="task-link">
+                            <div class="task">
+                                <strong>{{ task.title }}</strong><br>
+                                <small><strong>Responsável: </strong>
+                                {% if task.assignee %} 
+                                    {{ task.assignee.get_full_name|default:task.assignee.username}}
+                                {% endif %}
+                                </small><br>
+                                <small><strong>Atualizado: </strong>{{ task.updated_at|date:"d/m/Y H:i" }}</small>
+                            </div>
+                        </a>
+                    {% empty %}
+                        
+                    {% endfor %}
+                </div>
+            {% empty %}
+                
+            {% endfor %}
+        </div>
+        
+    </body>
+{% endblock %}
+

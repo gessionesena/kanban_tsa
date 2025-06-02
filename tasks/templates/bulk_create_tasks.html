@@ -1,0 +1,134 @@
+<!-- templates/bulk_create_tasks.html -->
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<style>
+    .form-section {
+            max-width: 600px;
+            margin: 20px auto;
+            text-align: center;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.5);
+        }
+        
+    .form-section h4 {
+        margin-top: 0;
+        text-align: center;
+        color: #0d3c6d;
+    }
+    .form-section h6 {
+        color: #0d3c6d;
+    }
+    .list {
+        text-align: left;
+    }
+    .activity-list {
+        list-style: none;
+        padding-left: 0;
+    }
+
+    .activity-list li {
+        margin-bottom: 10px;
+    }
+
+    input[type="text"],
+    select {
+        padding: 8px;
+        width: 100%;
+        max-width: 400px;
+        margin-top: 8px;
+        margin-bottom: 16px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .btn {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+        margin-right: 10px;
+    }
+
+    .btn-primary {
+        background-color: #1e3a5f;
+        color: white;
+    }
+
+    .btn-danger {
+        background-color: #b91c1c;
+        color: white;
+    }
+    .btn:hover { opacity: 0.85; }
+
+    label {
+        font-weight: 500;
+    }
+    .select-all {
+        font-weight: 600;
+    }
+</style>
+
+
+    <div class="form-section">
+        <h4>Adicionar Nova Atividade à Lista</h4>
+        <form method="post">
+            {% csrf_token %}
+            <input type="text" name="new_activity_title" placeholder="Digite uma nova atividade" required>
+            <button type="submit" name="action" value="add" class="btn btn-primary">Adicionar</button>
+        </form>
+    </div>
+
+
+
+    <div class="form-section">
+        <h4>Atividades Pré-selecionadas</h4>
+        <form method="post">
+            {% csrf_token %}
+            <div class="list">
+                {% if activities %}
+                    <label class="select-all">
+                        <input type="checkbox" id="select-all"> Selecionar todas
+                        <hr>
+                    </label>
+                    <ul class="activity-list">
+                        {% for activity in activities %}
+                            <li>
+                                <label>
+                                    <input type="checkbox" name="selected_activities" value="{{ activity.id }}" class="activity-checkbox">
+                                {{ activity.title }}
+                                </label>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>Nenhuma atividade cadastrada.</p>
+                {% endif %}
+            </div>        
+            {% if columns %}
+                <select name="column_id">
+                    <option value="">-- Selecione uma Coluna para Criar Tarefas --</option>
+                    {% for column in columns %}
+                        <option value="{{ column.id }}">{{ column.name }}</option>
+                    {% endfor %}
+                </select>
+            {% else %}
+                <p>Nenhuma coluna disponível.</p>
+            {% endif %}
+
+            <br>
+        
+            <button type="submit" name="action" value="create" class="btn btn-primary">Criar Tarefas</button>
+            <button type="submit" name="action" value="delete" class="btn btn-danger">Excluir</button>
+        </form>
+    </div>
+
+<script src="{% static 'js/select_all.js' %}"></script>
+
+{% endblock %}

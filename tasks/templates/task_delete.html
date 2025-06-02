@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+  .form-container {
+    max-width: 600px;
+    text-align: center;
+    margin: 50px auto;
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    font-family: sans-serif;
+  }
+  .form-container h2 {
+    margin-bottom: 20px;
+    color:#0d3c6d;
+  }
+  
+  .btn {
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 16px;
+  }
+  
+  .btn-delete { 
+    background-color: #b00020; 
+  }
+  .btn-cancel { 
+    background-color: gray;
+  }
+  .btn-delete:hover, 
+  .btn-cancel:hover { 
+    opacity: 0.85; 
+  }
+  
+</style>
+<div class="form-container">
+  <h2>Confirmar Exclusão de Tarefa</h2>
+  <p>Tem certeza de que deseja excluir a tarefa <strong>{{ object.title }}</strong>?</p>
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-delete">Sim, exclua!</button>
+    <a href="{% url 'task_detail' object.pk %}" class=" btn btn-cancel">Cancel</a>
+  </form>
+</div>
+{% endblock %}

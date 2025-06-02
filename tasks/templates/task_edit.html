@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .form-container {
+        max-width: 450px;
+        margin: 20px auto;
+        background-color: #fff;
+        padding: 20px 30px;
+        border-radius: 8px;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    h2 {
+        text-align: center;
+        color: #0d3c6d;
+        margin: 10px 0 10px 0;
+    }
+
+    label {
+        display: block;
+        margin: 3px 0 3px 0;
+        font-weight: 500;
+        color: #0d3c6d;
+    }
+
+    input[type="text"],
+    select,
+    textarea {
+        width: 100%;
+        padding: 8px 10px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .btn {
+        font-size: 16px;
+        padding: 10px 20px;
+        background-color: #1e3a5f;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer; 
+        margin-right: 10px;       
+    }
+
+    .btn:hover {
+        background-color: #16304b;
+    }
+
+    .btn-cancel { 
+        background-color: gray;
+        font-size: 16px;
+        padding: 10px 20px;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+    }
+    .btn-cancel:hover {
+      opacity: 0.85; 
+    }
+   
+</style>
+
+<div class="form-container"> 
+  <h2>Editar Tarefa</h2>
+    <form method="post">
+      {% csrf_token %}
+      {% for field in form %}
+        <div>
+            <label for="{{ field.id_for_label }}">{{ field.label|capfirst }}</label>
+            {{ field }}
+            {% if field.errors %}
+                <small style="color: red;">{{ field.errors|striptags }}</small>
+            {% endif %}
+        </div>
+      {% endfor %}
+      
+        <button type="submit" class="btn">Salvar</button>
+        <a href="{% url 'task_detail' object.pk %}" class="btn-cancel ">Cancelar</a> 
+    </form>
+</div> 
+{% endblock %}

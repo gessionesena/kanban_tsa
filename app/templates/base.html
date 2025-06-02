@@ -1,0 +1,205 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Gerenciamento de Tarefas{% endblock %}</title>
+    
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #fff;
+        }
+
+        header {
+            background-color: #0d3c6d;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .menu {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .menu a {
+            color: white;
+            text-decoration: none;
+            padding: 12px 12px;
+            border-radius: 4px;
+        }
+
+        .menu a:hover,
+        .dropdown:hover .dropbtn {
+            background-color: #0a2f52;
+        }
+
+        .dropdown {
+            position: relative;
+        }
+
+        .dropbtn {
+            background-color: #0d3c6d;
+            font-size: 16px;
+            color: white;
+            border: none;
+            cursor: pointer;
+            padding: 12px 12px;
+            border-radius: 4px;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 40px;
+            background-color: white;
+            border-radius: 5px;
+            color: black;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px rgba(0,0,0,0.5);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: #0d3c6d;
+            padding: 10px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f0f0f0;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .logo {
+            height: 40px;
+        }
+
+        main {
+            padding: 5px;
+        }
+
+        .login-container {
+            max-width: 400px;
+            margin: 50px auto;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            font-family: sans-serif;
+        }
+
+        .login-title {
+            text-align: center;
+            color: #0d3c6d;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .btn-login {
+            width: 100%;
+            background-color: #0d3c6d;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .btn-login:hover {
+            background-color: #0b2f53;
+        }
+
+        .btn-logout {
+            width: 100%;
+            background-color: #0d3c6d;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            display: inline;
+        }
+        .btn-logout:hover {
+            background-color: #0b2f53;
+        }
+
+    </style>
+</head>
+<body>
+    
+    <header>
+        <div>
+            <a href="{% url 'kanban_board' %}">
+                <img src="{% static 'images/logo.png' %}" alt="Logo" class="logo">
+            </a>
+        </div>
+
+        <nav class="menu">
+
+            {% if user.is_authenticated %}
+                <a href="{% url 'bulk_create_tasks' %}">Pré-Tarefas</a>
+            {% endif %}
+
+            <div class="dropdown">
+                <button class="dropbtn">Colunas</button>
+                <div class="dropdown-content">
+                    {% for column in all_columns %}
+                        <a href="{% url 'column_tasks' column.id %}">{{ column.name }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+
+            {% if request.user.is_superuser %}
+                <a href="/admin/">Admin</a>
+            {% endif %}
+
+            {% if not user.is_authenticated %}
+                <a href="{% url 'login' %}">Entrar</a>
+            {% endif %} 
+               
+            {% if user.is_authenticated %}
+                <form action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                    <button type="submit" class="btn-logout">Sair</button>
+                </form>   
+            {% endif %}
+            
+        </nav>
+
+    </header>
+
+    <main>
+        
+        {% block content %}
+            
+
+        {% endblock %}
+    </main>
+
+</body>
+</html>
+

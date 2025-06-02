@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+    <style>
+        h2 {
+            text-align: center;
+            color: #0d3c6d;
+        }
+        .tasks-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 10px;
+            justify-content: center;
+        }
+        
+        .task-link {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .task {
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            width: 230px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            transition: background-color 0.3s ease;
+        }
+
+        .task-link:hover .task {
+            background-color: #bbd3ea;
+            cursor: pointer;
+        }
+
+        @media (max-width: 320px) {
+            .task {
+                width: 100%;
+            }
+        }
+        #search-form {
+            text-align: center; 
+            margin: 20px 0;
+        }
+        #search-form button {
+            padding: 8px 20px; 
+            border: none; 
+            background-color: #0d3c6d; 
+            color: white; 
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #search-form button:hover {
+            background-color: #0b2f53; 
+        }
+        #search-form a {
+            background-color: #0d3c6d;
+            font-size: 13px;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            padding: 8px 20px; 
+            border: none;
+        }
+        #search-form a:hover{
+            background-color: #0b2f53; 
+        }
+        #search-input {
+            padding: 6px; 
+            width: 350px; 
+            border-radius: 5px; 
+            border: 1px solid #ccc;
+        }
+    </style>
+
+    <h2>Tarefas com Status: {{ column.name }}</h2>
+
+    <form method="get" id="search-form" action="">
+        <input type="text" name="search" id="search-input" placeholder="Buscar tarefas" value="{{ query }}">
+        <button type="submit">Buscar</button>
+        <a href="{% url 'task_create' %}">Criar Nova Tarefa</a>
+    </form>
+
+    <p style="text-align: center; color: #0d3c6d;"><strong>Total de Tarefas:</strong> {{ column.task_set.count }}</p>
+
+    <div class="tasks-container">
+        {% for task in tasks %}
+            <a href="{% url 'task_detail' task.id %}" class="task-link">
+                
+                <div class="task">    
+                    <strong>{{ task.title }}</strong><br>
+                    <small>{{ task.grade_level }}/{{ task.discipline }}</small><br>
+                    <small><strong>Responsável: </strong>
+                        {% if task.assignee %} 
+                            {{ task.assignee.get_full_name|default:task.assignee.username }}
+                        {% endif %}
+                    </small><br>
+                    <small><strong>Criado: </strong>{{ task.created_at|date:"d/m/Y H:i" }}</small><br>
+                    <small><strong>Atualizado: </strong>{{ task.updated_at|date:"d/m/Y H:i" }}</small>
+                </div>
+            </a>
+        {% empty %}
+            
+        {% endfor %}
+    </div>
+
+    <p style="text-align: center; margin-top: 20px;">
+        <a href="{% url 'kanban_board' %}">← Voltar</a>
+    </p>
+
+{% endblock %}

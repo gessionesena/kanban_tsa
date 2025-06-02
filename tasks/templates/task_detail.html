@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <style>
+        body {
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background: #fff;
+            padding: 10px 20px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.5);
+        }
+        h2 {
+            margin-bottom: 20px;
+            text-align: center;
+            color: #0d3c6d;
+        }
+        .field {
+            margin-bottom: 20px;
+        }
+        .field label {
+            font-weight: bold;
+        }
+        .buttons {
+            text-align: center;
+            margin: 30px 0px;
+        }
+        .btn {
+            padding: 10px 15px;
+            margin-right: 10px;
+            text-decoration: none;
+            border-radius: 4px;
+            color: white;
+        }
+        .btn-edit { background-color: #0d3c6d; }
+        .btn-move { background-color: #0d3c6d; }
+        .btn-delete { background-color: #b00020; }
+        .btn-cancel { background-color: gray; }
+        .btn-delete:hover { opacity: 0.85; }
+        .btn-cancel:hover {opacity: 0.85;}
+        .btn-edit:hover { background-color: #16304b; }
+        .btn-move:hover { background-color: #16304b; }
+    </style>
+
+
+    <div class="container">
+        <h2>{{ task.title }}</h2>
+
+        <div class="field">
+            <label>Disciplina/Área:</label> {{ task.discipline }}
+        </div>
+        <div class="field">
+            <label>Nível de Escolaridade:</label> {{ task.grade_level }}
+        </div>
+        <div class="field">
+            <label>Descrição:</label>
+            <p>{{ task.description }}</p>
+        </div>
+        <div class="field">
+            {% if task.assignee %}
+                <label>Responsável:</label> {{ task.assignee.get_full_name|default:task.assignee.username }}
+            {% endif %}
+        </div>
+        <div class="field">
+            <label>Status Atual:</label> {{ task.column.name }}
+        </div>
+
+        <div class="buttons">
+            {% if task.assignee %}
+                <a href="{% url 'task_move' task.id %}" class="btn btn-move">Mover</a>
+            {% endif %}
+            <a href="{% url 'task_edit' task.id %}" class="btn btn-edit">Editar</a>
+            <a href="{% url 'task_delete' task.id %}" class="btn btn-delete">Deletar</a>
+            <a href="{% url 'kanban_board' %}" class="btn btn-cancel">Cancelar</a>
+        </div>
+
+    </div>
+
+{% endblock %}
+
+

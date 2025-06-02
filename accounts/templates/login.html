@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .login-container {
+        max-width: 400px;
+        margin: 80px auto;
+        background-color: #fff;
+        padding: 20px 30px;
+        border-radius: 8px;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
+        
+    }
+
+    .login-title {
+        text-align: center;
+        color: #1e3a5f;
+        margin: 20px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 500;
+        color: #1e3a5f;
+        text-align: left;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+        width: 95%;
+        padding: 10px 10px;
+        margin-bottom: 5px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+    .btn {
+        margin-top: 30px;
+        text-align: center;
+    }
+
+    .btn-login {
+        width: 60%;
+        padding: 10px;
+        background-color: #1e3a5f;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    .btn-login:hover {
+        background-color: #16304b;
+    }
+</style>
+<div class="login-container">
+    <h2 class="login-title">Entrar no Sistema</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="{{ form.username.id_for_label }}">Usuário</label>
+            {{ form.username }}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.password.id_for_label }}">Senha</label>
+            {{ form.password }}
+        </div>
+        <div class="btn">
+            <button type="submit" class="btn-login">Entrar</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

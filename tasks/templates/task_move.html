@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <style>
+        .form-container {
+            max-width: 400px;
+            text-align: center;
+            margin: 50px auto;
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            font-family: sans-serif;
+        }
+        .form-container h2 {
+            margin-bottom: 20px;
+            color:#0d3c6d;
+        }
+        .form-control {
+            width: 100%;
+            padding: 8px;
+            margin: 12px 0;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        .btn {
+            background-color: #0d3c6d;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #0b2f53;
+        }
+    </style>
+
+    <body>
+        <div class="form-container">
+            <h2>Alterar Status da Tarefa</h2>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.column.errors }}
+                {{ form.column }}
+                <button type="submit" class="btn">Alterar</button>
+            </form>
+        </div>
+    </body>
+{% endblock %}
+
